@@ -54,7 +54,6 @@ class MonitoringExampleNotification extends Notification implements ShouldQueue
     {
         return [
             'data' => $this->data,
-            'notifiable' => get_class($notifiable),
         ];
     }
 }

@@ -1,15 +1,15 @@
-# Sentinel Actor
+# Sentinel Actor (Laravel Monitoring Client)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nazirul-amin/sentinel-actor.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/sentinel-actor)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/sentinel-actor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/nazirul-amin/sentinel-actor/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/sentinel-actor/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/nazirul-amin/sentinel-actor/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/nazirul-amin/sentinel-actor.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/sentinel-actor)
 
-This package provides a simple way to monitor your application by sending exception data to a webhook endpoint. It includes traits and utilities to automatically send exception information from jobs, notifications, and other parts of your application.
+This package provides a simple way to monitor your Laravel application by sending exception data to a webhook endpoint. It includes traits and utilities to automatically send exception information from jobs, notifications, and other parts of your application. Compatible with PHP 8.1+ and Laravel 10+.
 
 # Installation
 
-You can install the package via composer:
+You can install the package via composer (compatible with PHP 8.1+ and Laravel 10+):
 
 ```bash
 composer require nazirul-amin/sentinel-actor

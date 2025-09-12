@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 4
+			path: config/monitoring-client.php
+
+		-
+			message: '#^Call to function method_exists\(\) with \$this\(NazirulAmin\\SentinelActor\\Jobs\\MonitoringExampleJob\) and ''getMonitoringContex…'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Jobs/MonitoringExampleJob.php
+
+		-
+			message: '#^Call to function method_exists\(\) with \$this\(NazirulAmin\\SentinelActor\\Notifications\\MonitoringExampleNotification\) and ''getMonitoringContex…'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Notifications/MonitoringExampleNotification.php

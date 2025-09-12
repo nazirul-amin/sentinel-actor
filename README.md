@@ -43,7 +43,7 @@ return [
 
     'webhook' => [
         'url' => env('SENTINEL_WEBHOOK_URL'),
-        'endpoint' => '/application/exceptions',
+        'endpoint' => env('SENTINEL_EXCEPTION_URL', '/application/exceptions'),
         'application_id' => env('SENTINEL_APPLICATION_ID', 'app-id'),
         'secret' => env('SENTINEL_WEBHOOK_SECRET'),
     ],
@@ -66,6 +66,7 @@ Add the following environment variables to your `.env` file:
 
 ```env
 SENTINEL_WEBHOOK_URL=https://your-monitoring-service.com/webhook
+SENTINEL_EXCEPTION_URL=/application/exceptions
 SENTINEL_APPLICATION_ID=your-app-name
 SENTINEL_WEBHOOK_SECRET=your-hmac-secret
 SENTINEL_ENABLED=true

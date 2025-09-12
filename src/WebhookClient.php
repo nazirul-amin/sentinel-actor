@@ -60,18 +60,25 @@ class WebhookClient
      */
     public function sendException(Throwable $exception, array $context = []): void
     {
-        $data = [
-            'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
-            'type' => 'exception',
-            'message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'timestamp' => time(),
-            'code' => $exception->getCode(),
-            'trace' => $exception->getTrace(),
-            'context' => $context,
-        ];
+        try {
+            $data = [
+                'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
+                'type' => 'exception',
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'timestamp' => time(),
+                'code' => $exception->getCode(),
+                'trace' => $exception->getTrace(),
+                'context' => $context,
+            ];
 
-        $this->send(config('sentinel-actor.webhook.endpoint', '/application/exceptions'), $data);
+            $this->send(config('sentinel-actor.webhook.endpoint', '/application/exceptions'), $data);
+        } catch (Throwable $e) {
+            Log::error('Error in WebhookClient::sendException', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
 }

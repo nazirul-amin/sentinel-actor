@@ -2,6 +2,7 @@
 
 namespace NazirulAmin\SentinelActor\Traits;
 
+use Illuminate\Support\Facades\Log;
 use NazirulAmin\SentinelActor\Facades\SentinelActor;
 use Throwable;
 
@@ -14,11 +15,18 @@ trait MonitorsExceptions
      */
     public function failed(Throwable $exception)
     {
-        // Get class context information
-        $context = $this->getMonitoringContext();
+        try {
+            // Get class context information
+            $context = $this->getMonitoringContext();
 
-        // Send exception to monitoring service
-        SentinelActor::sendException($exception, $context);
+            // Send exception to monitoring service
+            SentinelActor::sendException($exception, $context);
+        } catch (Throwable $e) {
+            Log::error('Error in MonitorsExceptions::failed', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
 
     /**

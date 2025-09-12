@@ -19,3 +19,6 @@ All notable changes to `sentinel-actor` will be documented in this file.
 -   Added CONTRIBUTING.md file
 -   Fixed publishable tag names to use consistent "sentinel-actor" prefix
 -   Fixed HMAC signature generation to match webhook receiver validation
+-   Removed unused sentinel_events database table and model
+-   Added error handling to automatic exception monitoring for better diagnostics
+-   Added SENTINEL_EXCEPTION_URL environment variable for endpoint configuration

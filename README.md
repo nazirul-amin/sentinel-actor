@@ -42,13 +42,13 @@ return [
     */
 
     'webhook' => [
-        'url' => env('MONITORING_WEBHOOK_URL'),
+        'url' => env('SENTINEL_WEBHOOK_URL'),
         'endpoint' => '/application/exceptions',
-        'application_id' => env('MONITORING_APPLICATION_ID', 'app-id'),
-        'secret' => env('MONITORING_WEBHOOK_SECRET'),
+        'application_id' => env('SENTINEL_APPLICATION_ID', 'app-id'),
+        'secret' => env('SENTINEL_WEBHOOK_SECRET'),
     ],
 
-    'enabled' => env('MONITORING_ENABLED', true),
+    'enabled' => env('SENTINEL_ENABLED', true),
 
     'levels' => [
         'info',
@@ -65,10 +65,10 @@ return [
 Add the following environment variables to your `.env` file:
 
 ```env
-MONITORING_WEBHOOK_URL=https://your-monitoring-service.com/webhook
-MONITORING_APPLICATION_ID=your-app-name
-MONITORING_WEBHOOK_SECRET=your-hmac-secret
-MONITORING_ENABLED=true
+SENTINEL_WEBHOOK_URL=https://your-monitoring-service.com/webhook
+SENTINEL_APPLICATION_ID=your-app-name
+SENTINEL_WEBHOOK_SECRET=your-hmac-secret
+SENTINEL_ENABLED=true
 ```
 
 ## HMAC Signature Verification

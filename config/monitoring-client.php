@@ -12,13 +12,13 @@ return [
     */
 
     'webhook' => [
-        'url' => env('MONITORING_WEBHOOK_URL'),
+        'url' => env('SENTINEL_WEBHOOK_URL'),
         'endpoint' => '/application/exceptions',
-        'application_id' => env('MONITORING_APPLICATION_ID', 'app-id'),
-        'secret' => env('MONITORING_WEBHOOK_SECRET'),
+        'application_id' => env('SENTINEL_APPLICATION_ID', 'app-id'),
+        'secret' => env('SENTINEL_WEBHOOK_SECRET'),
     ],
 
-    'enabled' => env('MONITORING_ENABLED', true),
+    'enabled' => env('SENTINEL_ENABLED', true),
 
     'levels' => [
         'info',

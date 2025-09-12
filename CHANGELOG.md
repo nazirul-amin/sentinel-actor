@@ -17,3 +17,4 @@ All notable changes to `sentinel-actor` will be documented in this file.
 -   Updated Laravel compatibility to ^10.0||^11.0||^12.0 (from ^11.0||^12.0)
 -   Updated GitHub Actions workflows to test against broader PHP and Laravel versions
 -   Added CONTRIBUTING.md file
+-   Fixed publishable tag names to use consistent "sentinel-actor" prefix

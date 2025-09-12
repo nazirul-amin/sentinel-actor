@@ -21,11 +21,11 @@ class SentinelActorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/monitoring-client.php' => config_path('monitoring-client.php'),
-            ], 'monitoring-client-config');
+            ], 'sentinel-actor-config');
 
             $this->publishes([
                 __DIR__.'/../database/migrations/create_monitoring_client_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_monitoring_client_table.php'),
-            ], 'monitoring-client-migrations');
+            ], 'sentinel-actor-migrations');
         }
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'monitoring-client');

@@ -8,12 +8,24 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('laravel_monitoring_client_table', function (Blueprint $table) {
+        Schema::create('monitoring_events', function (Blueprint $table) {
             $table->id();
-
-            // add fields
-
+            $table->string('application_id');
+            $table->string('event_type');
+            $table->string('level')->default('info');
+            $table->text('message')->nullable();
+            $table->json('context')->nullable();
+            $table->timestamp('timestamp');
             $table->timestamps();
+
+            $table->index(['application_id', 'event_type']);
+            $table->index('level');
+            $table->index('timestamp');
         });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('monitoring_events');
     }
 };

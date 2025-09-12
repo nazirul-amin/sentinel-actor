@@ -2,24 +2,42 @@
 
 namespace NazirulAmin\LaravelMonitoringClient;
 
+use Illuminate\Support\ServiceProvider;
 use NazirulAmin\LaravelMonitoringClient\Commands\LaravelMonitoringClientCommand;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class LaravelMonitoringClientServiceProvider extends PackageServiceProvider
+class LaravelMonitoringClientServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function register(): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
-        $package
-            ->name('laravel-monitoring-client')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel_monitoring_client_table')
-            ->hasCommand(LaravelMonitoringClientCommand::class);
+        $this->mergeConfigFrom(__DIR__.'/../config/monitoring-client.php', 'monitoring-client');
+
+        $this->app->singleton(LaravelMonitoringClient::class, function () {
+            return new LaravelMonitoringClient;
+        });
+    }
+
+    public function boot(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/monitoring-client.php' => config_path('monitoring-client.php'),
+            ], 'monitoring-client-config');
+
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_monitoring_client_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_monitoring_client_table.php'),
+            ], 'monitoring-client-migrations');
+
+            $this->publishes([
+                __DIR__.'/../routes/web.php' => base_path('routes/monitoring.php'),
+            ], 'monitoring-client-routes');
+        }
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'monitoring-client');
+
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
+        $this->commands([
+            LaravelMonitoringClientCommand::class,
+        ]);
     }
 }

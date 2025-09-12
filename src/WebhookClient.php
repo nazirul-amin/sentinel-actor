@@ -29,14 +29,17 @@ class WebhookClient
             // Add timestamp to data for HMAC calculation
             $data['timestamp'] = $data['timestamp'] ?? time();
 
+            // Create JSON payload
+            $payload = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
             // Generate HMAC signature
             $secret = config('sentinel-actor.webhook.secret');
-            $signature = $this->generateSignature($data, $secret);
+            $signature = hash_hmac('sha256', $payload, $secret);
 
             // Send request with HMAC signature in header
             $response = Http::withHeaders([
                 'Sentinel-Signature' => $signature,
-            ])->post($webhookUrl.$endpoint, $data);
+            ])->withBody($payload, 'application/json')->post($webhookUrl.$endpoint);
 
             if (! $response->successful()) {
                 Log::error('Failed to send monitoring data', [
@@ -50,25 +53,6 @@ class WebhookClient
                 'trace' => $throwable->getTraceAsString(),
             ]);
         }
-    }
-
-    /**
-     * Generate HMAC signature for the data
-     */
-    protected function generateSignature(array $data, ?string $secret): string
-    {
-        if (empty($secret)) {
-            return '';
-        }
-
-        // Sort data to ensure consistent signature generation
-        ksort($data);
-
-        // Create JSON payload
-        $payload = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-
-        // Generate HMAC signature
-        return hash_hmac('sha256', $payload, $secret);
     }
 
     /**

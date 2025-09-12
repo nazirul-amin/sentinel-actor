@@ -18,3 +18,4 @@ All notable changes to `sentinel-actor` will be documented in this file.
 -   Updated GitHub Actions workflows to test against broader PHP and Laravel versions
 -   Added CONTRIBUTING.md file
 -   Fixed publishable tag names to use consistent "sentinel-actor" prefix
+-   Fixed HMAC signature generation to match webhook receiver validation

@@ -2,9 +2,9 @@
 
 namespace NazirulAmin\LaravelMonitoringClient;
 
+use NazirulAmin\LaravelMonitoringClient\Commands\LaravelMonitoringClientCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use NazirulAmin\LaravelMonitoringClient\Commands\LaravelMonitoringClientCommand;
 
 class LaravelMonitoringClientServiceProvider extends PackageServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Exceptions;
+namespace NazirulAmin\SentinelActor\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use NazirulAmin\LaravelMonitoringClient\Facades\LaravelMonitoringClient;
+use NazirulAmin\SentinelActor\Facades\SentinelActor;
 use Throwable;
 
 class MonitoringExceptionHandler extends ExceptionHandler
@@ -17,7 +17,7 @@ class MonitoringExceptionHandler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             // Send exception to monitoring service
-            LaravelMonitoringClient::sendException($e);
+            SentinelActor::sendException($e);
         });
     }
 }

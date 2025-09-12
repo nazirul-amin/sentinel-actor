@@ -1,6 +1,6 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Models;
+namespace NazirulAmin\SentinelActor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

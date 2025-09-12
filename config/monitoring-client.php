@@ -1,6 +1,6 @@
 <?php
 
-// config for NazirulAmin/LaravelMonitoringClient
+// config for NazirulAmin/SentinelActor
 return [
     /*
     |--------------------------------------------------------------------------
@@ -14,8 +14,8 @@ return [
     'webhook' => [
         'url' => env('MONITORING_WEBHOOK_URL'),
         'endpoint' => '/application/exceptions',
-        'application_id' => env('MONITORING_APPLICATION_ID', 'laravel-app'),
-        'secret' => env('MONITORING_WEBHOOK_SECRET'), // HMAC secret for request verification
+        'application_id' => env('MONITORING_APPLICATION_ID', 'app-id'),
+        'secret' => env('MONITORING_WEBHOOK_SECRET'),
     ],
 
     'enabled' => env('MONITORING_ENABLED', true),

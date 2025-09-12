@@ -1,9 +1,9 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Tests;
+namespace NazirulAmin\SentinelActor\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use NazirulAmin\LaravelMonitoringClient\LaravelMonitoringClientServiceProvider;
+use NazirulAmin\SentinelActor\SentinelActorServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'NazirulAmin\\LaravelMonitoringClient\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'NazirulAmin\\SentinelActor\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            LaravelMonitoringClientServiceProvider::class,
+            SentinelActorServiceProvider::class,
         ];
     }
 

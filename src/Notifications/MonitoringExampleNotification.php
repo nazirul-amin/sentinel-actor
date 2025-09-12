@@ -1,11 +1,11 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Notifications;
+namespace NazirulAmin\SentinelActor\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NazirulAmin\LaravelMonitoringClient\Traits\MonitorsExceptions;
+use NazirulAmin\SentinelActor\Traits\MonitorsExceptions;
 
 class MonitoringExampleNotification extends Notification implements ShouldQueue
 {

@@ -1,31 +1,31 @@
-# Laravel Monitoring Client
+# Sentinel Actor
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/nazirul-amin/laravel-monitoring-client.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/laravel-monitoring-client)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/laravel-monitoring-client/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/nazirul-amin/laravel-monitoring-client/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/laravel-monitoring-client/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/nazirul-amin/laravel-monitoring-client/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/nazirul-amin/laravel-monitoring-client.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/laravel-monitoring-client)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/nazirul-amin/sentinel-actor.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/sentinel-actor)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/sentinel-actor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/nazirul-amin/sentinel-actor/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/sentinel-actor/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/nazirul-amin/sentinel-actor/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/nazirul-amin/sentinel-actor.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/sentinel-actor)
 
-This package provides a simple way to monitor your Laravel application by sending exception data to a webhook endpoint. It includes traits and utilities to automatically send exception information from jobs, notifications, and other parts of your application.
+This package provides a simple way to monitor your application by sending exception data to a webhook endpoint. It includes traits and utilities to automatically send exception information from jobs, notifications, and other parts of your application.
 
 # Installation
 
 You can install the package via composer:
 
 ```bash
-composer require nazirul-amin/laravel-monitoring-client
+composer require nazirul-amin/sentinel-actor
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-monitoring-client-migrations"
+php artisan vendor:publish --tag="sentinel-actor-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-monitoring-client-config"
+php artisan vendor:publish --tag="sentinel-actor-config"
 ```
 
 This is the contents of the published config file:
@@ -44,8 +44,8 @@ return [
     'webhook' => [
         'url' => env('MONITORING_WEBHOOK_URL'),
         'endpoint' => '/application/exceptions',
-        'application_id' => env('MONITORING_APPLICATION_ID', 'laravel-app'),
-        'secret' => env('MONITORING_WEBHOOK_SECRET'), // HMAC secret for request verification
+        'application_id' => env('MONITORING_APPLICATION_ID', 'app-id'),
+        'secret' => env('MONITORING_WEBHOOK_SECRET'),
     ],
 
     'enabled' => env('MONITORING_ENABLED', true),
@@ -93,7 +93,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use NazirulAmin\LaravelMonitoringClient\Traits\MonitorsExceptions;
+use NazirulAmin\SentinelActor\Traits\MonitorsExceptions;
 use Throwable;
 
 class YourJob implements ShouldQueue
@@ -129,7 +129,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NazirulAmin\LaravelMonitoringClient\Traits\MonitorsExceptions;
+use NazirulAmin\SentinelActor\Traits\MonitorsExceptions;
 
 class YourNotification extends Notification implements ShouldQueue
 {
@@ -162,13 +162,13 @@ class YourNotification extends Notification implements ShouldQueue
 You can also manually send exception data using the facade:
 
 ```php
-use NazirulAmin\LaravelMonitoringClient\Facades\LaravelMonitoringClient;
+use NazirulAmin\SentinelActor\Facades\SentinelActor;
 use Throwable;
 
 try {
     // Some code that might throw an exception
 } catch (Throwable $exception) {
-    LaravelMonitoringClient::sendException($exception, [
+    SentinelActor::sendException($exception, [
         'additional_context' => 'some_value',
     ]);
 }
@@ -179,9 +179,9 @@ try {
 You can also send custom events to your monitoring service:
 
 ```php
-use NazirulAmin\LaravelMonitoringClient\Facades\LaravelMonitoringClient;
+use NazirulAmin\SentinelActor\Facades\SentinelActor;
 
-LaravelMonitoringClient::send('/application/events', [
+SentinelActor::send('/application/events', [
     'application_id' => 'your-app-name',
     'event_type' => 'user_registered',
     'level' => 'info',

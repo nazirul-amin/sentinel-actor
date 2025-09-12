@@ -1,8 +1,8 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Traits;
+namespace NazirulAmin\SentinelActor\Traits;
 
-use NazirulAmin\LaravelMonitoringClient\Facades\LaravelMonitoringClient;
+use NazirulAmin\SentinelActor\Facades\SentinelActor;
 use Throwable;
 
 trait MonitorsExceptions
@@ -18,7 +18,7 @@ trait MonitorsExceptions
         $context = $this->getMonitoringContext();
 
         // Send exception to monitoring service
-        LaravelMonitoringClient::sendException($exception, $context);
+        SentinelActor::sendException($exception, $context);
     }
 
     /**

@@ -1,12 +1,12 @@
 {
-    "name": "nazirul-amin/laravel-monitoring-client",
-    "description": "This is my package laravel-monitoring-client",
+    "name": "nazirul-amin/sentinel-actor",
+    "description": "This is my package sentinel-actor",
     "keywords": [
         "nazirulamin",
         "laravel",
-        "laravel-monitoring-client"
+        "sentinel-actor"
     ],
-    "homepage": "https://github.com/nazirul-amin/laravel-monitoring-client",
+    "homepage": "https://github.com/nazirul-amin/sentinel-actor",
     "license": "MIT",
     "authors": [
         {
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "NazirulAmin\\LaravelMonitoringClient\\": "src/",
-            "NazirulAmin\\LaravelMonitoringClient\\Database\\Factories\\": "database/factories/"
+            "NazirulAmin\\SentinelActor\\": "src/",
+            "NazirulAmin\\SentinelActor\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NazirulAmin\\LaravelMonitoringClient\\Tests\\": "tests/",
+            "NazirulAmin\\SentinelActor\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NazirulAmin\\LaravelMonitoringClient\\LaravelMonitoringClientServiceProvider"
+                "NazirulAmin\\SentinelActor\\SentinelActorServiceProvider"
             ],
             "aliases": {
-                "LaravelMonitoringClient": "NazirulAmin\\LaravelMonitoringClient\\Facades\\LaravelMonitoringClient"
+                "SentinelActor": "NazirulAmin\\SentinelActor\\Facades\\SentinelActor"
             }
         }
     },

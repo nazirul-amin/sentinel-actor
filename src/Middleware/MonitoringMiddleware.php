@@ -1,6 +1,6 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Middleware;
+namespace NazirulAmin\SentinelActor\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

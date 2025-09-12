@@ -1,6 +1,6 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Database\Factories;
+namespace NazirulAmin\SentinelActor\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

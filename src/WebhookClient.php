@@ -1,6 +1,6 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient;
+namespace NazirulAmin\SentinelActor;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -77,7 +77,7 @@ class WebhookClient
     public function sendException(Throwable $exception, array $context = []): void
     {
         $data = [
-            'application_id' => config('monitoring-client.webhook.application_id', 'laravel-app'),
+            'application_id' => config('monitoring-client.webhook.application_id', 'app-id'),
             'type' => 'exception',
             'message' => $exception->getMessage(),
             'file' => $exception->getFile(),

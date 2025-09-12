@@ -1,12 +1,12 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Commands;
+namespace NazirulAmin\SentinelActor\Commands;
 
 use Illuminate\Console\Command;
-use NazirulAmin\LaravelMonitoringClient\Facades\LaravelMonitoringClient;
-use NazirulAmin\LaravelMonitoringClient\Jobs\MonitoringExampleJob;
+use NazirulAmin\SentinelActor\Facades\SentinelActor;
+use NazirulAmin\SentinelActor\Jobs\MonitoringExampleJob;
 
-class LaravelMonitoringClientCommand extends Command
+class SentinelActorCommand extends Command
 {
     public $signature = 'monitoring:test {--job : Test job monitoring} {--exception : Test exception monitoring}';
 
@@ -27,7 +27,7 @@ class LaravelMonitoringClientCommand extends Command
             try {
                 throw new \Exception('Test exception for monitoring');
             } catch (\Exception $e) {
-                LaravelMonitoringClient::sendException($e, [
+                SentinelActor::sendException($e, [
                     'command' => 'monitoring:test',
                     'test_type' => 'exception',
                 ]);
@@ -37,7 +37,7 @@ class LaravelMonitoringClientCommand extends Command
             return self::SUCCESS;
         }
 
-        $this->info('Laravel Monitoring Client is installed and configured!');
+        $this->info('Sentinel Actor is installed and configured!');
         $this->line('Use --job to test job monitoring or --exception to test exception monitoring.');
 
         return self::SUCCESS;

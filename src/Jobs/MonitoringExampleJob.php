@@ -1,13 +1,13 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient\Jobs;
+namespace NazirulAmin\SentinelActor\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use NazirulAmin\LaravelMonitoringClient\Traits\MonitorsExceptions;
+use NazirulAmin\SentinelActor\Traits\MonitorsExceptions;
 
 class MonitoringExampleJob implements ShouldQueue
 {

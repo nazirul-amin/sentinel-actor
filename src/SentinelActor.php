@@ -1,10 +1,10 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient;
+namespace NazirulAmin\SentinelActor;
 
 use Throwable;
 
-class LaravelMonitoringClient
+class SentinelActor
 {
     protected WebhookClient $webhookClient;
 

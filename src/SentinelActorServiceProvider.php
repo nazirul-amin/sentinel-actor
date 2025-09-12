@@ -1,18 +1,18 @@
 <?php
 
-namespace NazirulAmin\LaravelMonitoringClient;
+namespace NazirulAmin\SentinelActor;
 
 use Illuminate\Support\ServiceProvider;
-use NazirulAmin\LaravelMonitoringClient\Commands\LaravelMonitoringClientCommand;
+use NazirulAmin\SentinelActor\Commands\SentinelActorCommand;
 
-class LaravelMonitoringClientServiceProvider extends ServiceProvider
+class SentinelActorServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/monitoring-client.php', 'monitoring-client');
 
-        $this->app->singleton(LaravelMonitoringClient::class, function () {
-            return new LaravelMonitoringClient;
+        $this->app->singleton(SentinelActor::class, function () {
+            return new SentinelActor;
         });
     }
 
@@ -31,7 +31,7 @@ class LaravelMonitoringClientServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'monitoring-client');
 
         $this->commands([
-            LaravelMonitoringClientCommand::class,
+            SentinelActorCommand::class,
         ]);
     }
 }

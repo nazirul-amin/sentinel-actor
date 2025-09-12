@@ -13,11 +13,11 @@ class WebhookClient
      */
     public function send(string $endpoint, array $data): void
     {
-        if (! config('monitoring-client.enabled', true)) {
+        if (! config('sentinel-actor.enabled', true)) {
             return;
         }
 
-        $webhookUrl = config('monitoring-client.webhook.url');
+        $webhookUrl = config('sentinel-actor.webhook.url');
 
         if (empty($webhookUrl)) {
             Log::warning('Monitoring webhook URL not configured');
@@ -30,7 +30,7 @@ class WebhookClient
             $data['timestamp'] = $data['timestamp'] ?? time();
 
             // Generate HMAC signature
-            $secret = config('monitoring-client.webhook.secret');
+            $secret = config('sentinel-actor.webhook.secret');
             $signature = $this->generateSignature($data, $secret);
 
             // Send request with HMAC signature in header
@@ -77,7 +77,7 @@ class WebhookClient
     public function sendException(Throwable $exception, array $context = []): void
     {
         $data = [
-            'application_id' => config('monitoring-client.webhook.application_id', 'app-id'),
+            'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
             'type' => 'exception',
             'message' => $exception->getMessage(),
             'file' => $exception->getFile(),
@@ -88,6 +88,6 @@ class WebhookClient
             'context' => $context,
         ];
 
-        $this->send(config('monitoring-client.webhook.endpoint', '/application/exceptions'), $data);
+        $this->send(config('sentinel-actor.webhook.endpoint', '/application/exceptions'), $data);
     }
 }

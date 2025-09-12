@@ -9,7 +9,7 @@ class SentinelActorServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/monitoring-client.php', 'monitoring-client');
+        $this->mergeConfigFrom(__DIR__.'/../config/sentinel-actor.php', 'sentinel-actor');
 
         $this->app->singleton(SentinelActor::class, function () {
             return new SentinelActor;
@@ -20,7 +20,7 @@ class SentinelActorServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/monitoring-client.php' => config_path('monitoring-client.php'),
+                __DIR__.'/../config/sentinel-actor.php' => config_path('sentinel-actor.php'),
             ], 'sentinel-actor-config');
 
             $this->publishes([
@@ -28,7 +28,7 @@ class SentinelActorServiceProvider extends ServiceProvider
             ], 'sentinel-actor-migrations');
         }
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'monitoring-client');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'sentinel-actor');
 
         $this->commands([
             SentinelActorCommand::class,

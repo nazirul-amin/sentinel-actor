@@ -1,16 +1,6 @@
 <?php
 
-// config for NazirulAmin/SentinelActor
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Monitoring Client Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you can configure the monitoring client settings.
-    |
-    */
-
     'webhook' => [
         'url' => env('SENTINEL_WEBHOOK_URL'),
         'endpoint' => '/application/exceptions',

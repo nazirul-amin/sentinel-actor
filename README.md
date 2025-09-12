@@ -1,4 +1,4 @@
-# Sentinel Actor (Laravel Monitoring Client)
+# Sentinel Actor
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nazirul-amin/sentinel-actor.svg?style=flat-square)](https://packagist.org/packages/nazirul-amin/sentinel-actor)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/nazirul-amin/sentinel-actor/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/nazirul-amin/sentinel-actor/actions?query=workflow%3Arun-tests+branch%3Amain)

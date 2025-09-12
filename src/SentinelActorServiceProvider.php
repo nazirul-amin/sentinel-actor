@@ -24,7 +24,7 @@ class SentinelActorServiceProvider extends ServiceProvider
             ], 'sentinel-actor-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations/create_monitoring_client_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_monitoring_client_table.php'),
+                __DIR__.'/../database/migrations/create_sentinel_actor_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_sentinel_actor_table.php'),
             ], 'sentinel-actor-migrations');
         }
 

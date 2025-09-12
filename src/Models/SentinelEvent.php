@@ -4,9 +4,9 @@ namespace NazirulAmin\SentinelActor\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MonitoringEvent extends Model
+class SentinelEvent extends Model
 {
-    protected $table = 'monitoring_events';
+    protected $table = 'sentinel_events';
 
     protected $fillable = [
         'application_id',

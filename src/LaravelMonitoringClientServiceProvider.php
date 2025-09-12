@@ -26,15 +26,9 @@ class LaravelMonitoringClientServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../database/migrations/create_monitoring_client_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_monitoring_client_table.php'),
             ], 'monitoring-client-migrations');
-
-            $this->publishes([
-                __DIR__.'/../routes/web.php' => base_path('routes/monitoring.php'),
-            ], 'monitoring-client-routes');
         }
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'monitoring-client');
-
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         $this->commands([
             LaravelMonitoringClientCommand::class,

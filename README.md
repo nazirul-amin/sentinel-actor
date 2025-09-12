@@ -83,26 +83,7 @@ MONITORING_ENABLED=true
 
 This package supports HMAC signature verification for enhanced security. When you configure a secret in your `.env` file, all outgoing webhook requests will be signed with HMAC-SHA256.
 
-The receiving service can verify the authenticity of the request by comparing the signature in the `Monitoring-Signature` header with a locally computed signature using the same secret.
-
-### For Spatie Webhook Client Integration
-
-If you're using this package with Spatie's webhook client, you can configure it to verify the HMAC signature:
-
-```php
-// config/webhook-client.php
-'configs' => [
-    [
-        'name' => 'monitoring',
-        'signing_secret' => env('MONITORING_WEBHOOK_SECRET'),
-        'signature_header_name' => 'Monitoring-Signature',
-        'signature_validator' => \Spatie\WebhookClient\Signatures\SignatureValidator::class,
-        'webhook_profile' => \Spatie\WebhookClient\WebhookProfile\ProcessEverythingWebhookProfile::class,
-        'webhook_response' => \Spatie\WebhookClient\WebhookResponse\DefaultRespondsTo::class,
-        'process_webhook_job' => App\Jobs\ProcessMonitoringWebhookJob::class,
-    ],
-],
-```
+The receiving service can verify the authenticity of the request by comparing the signature in the `X-Signature` header with a locally computed signature using the same secret.
 
 ## Usage
 
@@ -218,29 +199,6 @@ LaravelMonitoringClient::send('/application/events', [
     ],
     'timestamp' => time(),
 ]);
-```
-
-## Receiving Webhooks
-
-This package also includes a controller for receiving webhooks. You can publish the routes file and use it in your application:
-
-```bash
-php artisan vendor:publish --tag="monitoring-client-routes"
-```
-
-Then include the routes in your `RouteServiceProvider`:
-
-```php
-// app/Providers/RouteServiceProvider.php
-public function boot()
-{
-    // ...
-
-    Route::prefix('api')
-        ->middleware('api')
-        ->namespace($this->namespace)
-        ->group(base_path('routes/monitoring.php'));
-}
 ```
 
 ## Testing

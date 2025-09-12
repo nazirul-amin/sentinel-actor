@@ -75,7 +75,7 @@ MONITORING_ENABLED=true
 
 This package supports HMAC signature verification for enhanced security. When you configure a secret in your `.env` file, all outgoing webhook requests will be signed with HMAC-SHA256.
 
-The receiving service can verify the authenticity of the request by comparing the signature in the `Monitoring-Signature` header with a locally computed signature using the same secret.
+The receiving service can verify the authenticity of the request by comparing the signature in the `Sentinel-Signature` header with a locally computed signature using the same secret.
 
 ## Usage
 

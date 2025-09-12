@@ -35,7 +35,7 @@ class WebhookClient
 
             // Send request with HMAC signature in header
             $response = Http::withHeaders([
-                'Monitoring-Signature' => $signature,
+                'Sentinel-Signature' => $signature,
             ])->post($webhookUrl.$endpoint, $data);
 
             if (! $response->successful()) {

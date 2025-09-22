@@ -3,7 +3,10 @@
 namespace NazirulAmin\SentinelActor\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use NazirulAmin\SentinelActor\Facades\SentinelActor;
+use Throwable;
 
 class HealthCheckCommand extends Command
 {
@@ -12,14 +15,14 @@ class HealthCheckCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'sentinel:health-check';
+    protected $signature = 'sentinel:health-check {--verbose : Show detailed health check results}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Perform application health check and send status to monitoring service';
+    protected $description = 'Perform application health checks and send status to the monitoring service';
 
     /**
      * Execute the console command.
@@ -27,57 +30,96 @@ class HealthCheckCommand extends Command
     public function handle(): int
     {
         try {
-            // Perform basic health checks
-            $isHealthy = $this->performHealthChecks();
-            
+            $results = $this->performHealthChecks();
+            $isHealthy = collect($results)->every(fn ($result) => $result['status'] === true);
+
             // Send health status to monitoring service
-            SentinelActor::sendHealthStatus($isHealthy, $isHealthy ? 'Application is healthy' : 'Application is unhealthy', [
-                'checked_at' => now()->toISOString(),
-                'php_version' => PHP_VERSION,
-                'laravel_version' => app()->version(),
-            ]);
+            SentinelActor::sendHealthStatus(
+                $isHealthy,
+                $isHealthy ? 'Application is healthy' : 'Application has failing checks',
+                array_merge([
+                    'checked_at' => now()->toISOString(),
+                    'php_version' => PHP_VERSION,
+                    'laravel_version' => app()->version(),
+                ], $results)
+            );
 
             if ($isHealthy) {
-                $this->info('Health check completed successfully. Application is healthy.');
+                $this->info('Health check passed. Application is healthy.');
+
                 return self::SUCCESS;
-            } else {
-                $this->error('Health check completed. Application is unhealthy.');
-                return self::FAILURE;
             }
-        } catch (\Exception $e) {
-            // Send unhealthy status on error
-            SentinelActor::sendHealthStatus(false, 'Health check failed: ' . $e->getMessage(), [
+
+            $this->error('Health check failed. Some checks did not pass.');
+            if ($this->option('verbose')) {
+                foreach ($results as $name => $result) {
+                    $this->line("- {$name}: ".($result['status'] ? 'OK' : "FAILED ({$result['message']})"));
+                }
+            }
+
+            return self::FAILURE;
+        } catch (Throwable $e) {
+            SentinelActor::sendHealthStatus(false, 'Health check crashed: '.$e->getMessage(), [
                 'checked_at' => now()->toISOString(),
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
-            
-            $this->error('Health check failed: ' . $e->getMessage());
+
+            $this->error('Health check crashed: '.$e->getMessage());
+
             return self::FAILURE;
         }
     }
 
     /**
      * Perform basic health checks.
+     *
+     * @return array<string, array{status: bool, message: string|null}>
      */
-    private function performHealthChecks(): bool
+    private function performHealthChecks(): array
     {
-        // Check database connection
+        $checks = [];
+
+        // Database connection check
         try {
-            \DB::connection()->getPdo();
-        } catch (\Exception $e) {
-            $this->error('Database connection failed: ' . $e->getMessage());
-            return false;
+            DB::connection()->getPdo();
+            $checks['database'] = ['status' => true, 'message' => null];
+        } catch (Throwable $e) {
+            $checks['database'] = ['status' => false, 'message' => $e->getMessage()];
         }
 
-        // Check if storage is writable
-        if (!is_writable(storage_path())) {
-            $this->error('Storage directory is not writable');
-            return false;
+        // Storage writability check
+        $checks['storage_writable'] = [
+            'status' => is_writable(Storage::path('')),
+            'message' => is_writable(Storage::path('')) ? null : 'Storage directory is not writable',
+        ];
+
+        // Cache check
+        try {
+            cache()->set('health_check', true, 5);
+            $checks['cache'] = ['status' => true, 'message' => null];
+        } catch (Throwable $e) {
+            $checks['cache'] = ['status' => false, 'message' => $e->getMessage()];
         }
 
-        // Add more health checks as needed
-        // For example, check cache, queue, mail, etc.
+        // Queue check
+        try {
+            $queue = app('queue');
+            $queue->pushRaw('health_check');
+            $checks['queue'] = ['status' => true, 'message' => null];
+        } catch (Throwable $e) {
+            $checks['queue'] = ['status' => false, 'message' => $e->getMessage()];
+        }
 
-        return true;
+        // Mail check
+        try {
+            $mailer = app('mailer');
+            $mailer->getSwiftMailer();
+            $checks['mail'] = ['status' => true, 'message' => null];
+        } catch (Throwable $e) {
+            $checks['mail'] = ['status' => false, 'message' => $e->getMessage()];
+        }
+
+        return $checks;
     }
 }

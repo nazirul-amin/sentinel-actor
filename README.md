@@ -39,6 +39,7 @@ return [
         'endpoint' => env('SENTINEL_EXCEPTION_URL', '/application/exceptions'),
         'status_endpoint' => env('SENTINEL_STATUS_URL', '/application/status'),
         'application_id' => env('SENTINEL_APPLICATION_ID', 'app-id'),
+        'application_version' => env('SENTINEL_APPLICATION_VERSION', '1.0.0'),
         'secret' => env('SENTINEL_WEBHOOK_SECRET'),
     ],
 
@@ -63,6 +64,7 @@ SENTINEL_WEBHOOK_URL=https://your-monitoring-service.com/webhook
 SENTINEL_EXCEPTION_URL=/application/exceptions
 SENTINEL_STATUS_URL=/application/status
 SENTINEL_APPLICATION_ID=your-app-name
+SENTINEL_APPLICATION_VERSION=1.0.0
 SENTINEL_WEBHOOK_SECRET=your-hmac-secret
 SENTINEL_ENABLED=true
 ```
@@ -223,7 +225,8 @@ use NazirulAmin\SentinelActor\Facades\SentinelActor;
 
 SentinelActor::send('/application/events', [
     'application_id' => 'your-app-name',
-    'environment' => 'production',
+    'application_version' => '1.0.0', // Automatically added by the package
+    'environment' => 'production', // Automatically added by the package
     'event_type' => 'user_registered',
     'level' => 'info',
     'message' => 'A new user registered',
@@ -241,6 +244,7 @@ All webhooks sent by this package include the following data:
 ### Exception Webhooks
 
 -   `application_id`: The application identifier from config
+-   `application_version`: The application version from config
 -   `environment`: The current Laravel environment (local, production, staging, etc.)
 -   `type`: Set to 'exception'
 -   `message`: The exception message
@@ -254,6 +258,7 @@ All webhooks sent by this package include the following data:
 ### Status Update Webhooks
 
 -   `application_id`: The application identifier from config
+-   `application_version`: The application version from config
 -   `environment`: The current Laravel environment (local, production, staging, etc.)
 -   `type`: Set to 'status_update'
 -   `status`: The status being reported (e.g., 'running', 'stopped', 'maintenance')

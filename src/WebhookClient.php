@@ -64,7 +64,8 @@ class WebhookClient
         try {
             $data = [
                 'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
-                'environment' => config('sentinel-actor.webhook.environment', 'production'),
+                'application_version' => config('sentinel-actor.webhook.application_version', '1.0.0'),
+                'environment' => App::environment(),
                 'type' => 'exception',
                 'message' => $exception->getMessage(),
                 'file' => $exception->getFile(),
@@ -92,6 +93,7 @@ class WebhookClient
         try {
             $data = [
                 'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
+                'application_version' => config('sentinel-actor.webhook.application_version', '1.0.0'),
                 'environment' => App::environment(),
                 'type' => 'status_update',
                 'status' => $status,

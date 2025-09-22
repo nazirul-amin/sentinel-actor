@@ -35,8 +35,9 @@ class SentinelActor
      */
     public function send(string $endpoint, array $data): void
     {
-        // Ensure environment is included in custom events
+        // Ensure environment and application version are included in custom events
         $data['environment'] = $data['environment'] ?? App::environment();
+        $data['application_version'] = $data['application_version'] ?? config('sentinel-actor.webhook.application_version', '1.0.0');
 
         $this->webhookClient->send($endpoint, $data);
     }

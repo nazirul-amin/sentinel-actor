@@ -15,7 +15,7 @@ class HealthCheckCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'sentinel:health-check {--verbose : Show detailed health check results}';
+    protected $signature = 'sentinel:health-check';
 
     /**
      * The console command description.
@@ -33,7 +33,6 @@ class HealthCheckCommand extends Command
             $results = $this->performHealthChecks();
             $isHealthy = collect($results)->every(fn ($result) => $result['status'] === true);
 
-            // Send health status to monitoring service
             SentinelActor::sendHealthStatus(
                 $isHealthy,
                 $isHealthy ? 'Application is healthy' : 'Application has failing checks',
@@ -48,13 +47,6 @@ class HealthCheckCommand extends Command
                 $this->info('Health check passed. Application is healthy.');
 
                 return self::SUCCESS;
-            }
-
-            $this->error('Health check failed. Some checks did not pass.');
-            if ($this->option('verbose')) {
-                foreach ($results as $name => $result) {
-                    $this->line("- {$name}: ".($result['status'] ? 'OK' : "FAILED ({$result['message']})"));
-                }
             }
 
             return self::FAILURE;

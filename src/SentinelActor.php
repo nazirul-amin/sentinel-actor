@@ -23,11 +23,11 @@ class SentinelActor
     }
 
     /**
-     * Send application status update to monitoring service
+     * Send application health status to monitoring service
      */
-    public function sendStatusUpdate(string $status, ?string $message = null, array $context = []): void
+    public function sendHealthStatus(bool $isHealthy, ?string $message = null, array $context = []): void
     {
-        $this->webhookClient->sendStatusUpdate($status, $message, $context);
+        $this->webhookClient->sendHealthStatus($isHealthy, $message, $context);
     }
 
     /**

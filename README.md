@@ -155,9 +155,9 @@ class YourNotification extends Notification implements ShouldQueue
 }
 ```
 
-### Updating Application Status
+### Application Health Status Monitoring
 
-To send application status updates, use the `UpdatesApplicationStatus` trait:
+To send application health status updates (active/inactive), use the `UpdatesApplicationStatus` trait:
 
 ```php
 <?php
@@ -166,27 +166,32 @@ namespace App\Services;
 
 use NazirulAmin\SentinelActor\Traits\UpdatesApplicationStatus;
 
-class ApplicationService
+class HealthCheckService
 {
     use UpdatesApplicationStatus;
 
-    public function start()
+    public function checkHealth()
     {
-        // Your application start logic
+        try {
+            // Perform health checks
+            $isHealthy = $this->performHealthChecks();
 
-        // Send status update
-        $this->updateApplicationStatus('running', 'Application started successfully', [
-            'version' => '1.0.0',
-            'environment' => app()->environment(),
-        ]);
+            // Send health status
+            $this->updateHealthStatus($isHealthy, $isHealthy ? 'Application is healthy' : 'Application is unhealthy', [
+                'checked_at' => now()->toISOString(),
+                'environment' => app()->environment(),
+            ]);
+        } catch (Exception $e) {
+            // Send unhealthy status on error
+            $this->updateHealthStatus(false, 'Health check failed: ' . $e->getMessage());
+        }
     }
 
-    public function stop()
+    private function performHealthChecks(): bool
     {
-        // Your shutdown logic
-
-        // Send status update
-        $this->updateApplicationStatus('stopped', 'Application shutdown complete');
+        // Implement your health checks here
+        // Return true if healthy, false if unhealthy
+        return true;
     }
 
     // Optional: Add context data to be sent with status updates
@@ -198,6 +203,22 @@ class ApplicationService
     }
 }
 ```
+
+### Scheduled Health Checks
+
+The package includes a built-in health check command that can be scheduled to run periodically:
+
+```php
+// In your App\Console\Kernel class
+protected function schedule(Schedule $schedule)
+{
+    $schedule->command('sentinel:health-check')
+             ->everyMinute()
+             ->withoutOverlapping();
+}
+```
+
+This command performs basic health checks and sends the status to your monitoring service. You can customize the health checks by extending the command.
 
 ### Manual Exception Monitoring
 
@@ -255,7 +276,19 @@ All webhooks sent by this package include the following data:
 -   `trace`: The full exception trace
 -   `context`: Additional context information
 
-### Status Update Webhooks
+### Health Status Webhooks
+
+-   `application_id`: The application identifier from config
+-   `application_version`: The application version from config
+-   `environment`: The current Laravel environment (local, production, staging, etc.)
+-   `type`: Set to 'health_status'
+-   `status`: Either 'active' or 'inactive'
+-   `healthy`: Boolean value indicating health status (true/false)
+-   `message`: Optional message describing the health status
+-   `timestamp`: Unix timestamp when the health status was sent
+-   `context`: Additional context information
+
+### Status Update Webhooks (Legacy)
 
 -   `application_id`: The application identifier from config
 -   `application_version`: The application version from config

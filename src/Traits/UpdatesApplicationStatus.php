@@ -8,32 +8,33 @@ use NazirulAmin\SentinelActor\Facades\SentinelActor;
 trait UpdatesApplicationStatus
 {
     /**
-     * Send application status update to monitoring service
+     * Send application health status to monitoring service
      *
-     * @param  string  $status  The application status (e.g., 'starting', 'running', 'maintenance', 'stopped')
-     * @param  string|null  $message  Optional message describing the status
+     * @param  bool  $isHealthy  Whether the application is healthy/reachable
+     * @param  string|null  $message  Optional message describing the health status
      * @param  array  $context  Additional context data
      */
-    public function updateApplicationStatus(string $status, ?string $message = null, array $context = []): void
+    public function updateHealthStatus(bool $isHealthy, ?string $message = null, array $context = []): void
     {
         try {
-            // Prepare status data
+            // Prepare health status data
             $data = [
                 'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
-                'type' => 'status_update',
-                'status' => $status,
+                'type' => 'health_status',
+                'status' => $isHealthy ? 'active' : 'inactive',
+                'healthy' => $isHealthy,
                 'message' => $message,
                 'timestamp' => time(),
                 'context' => array_merge($context, $this->getStatusContext()),
             ];
 
-            // Send status update to monitoring service
+            // Send health status to monitoring service
             SentinelActor::send(
                 config('sentinel-actor.webhook.status_endpoint', '/application/status'),
                 $data
             );
         } catch (\Throwable $e) {
-            Log::error('Error in UpdatesApplicationStatus::updateApplicationStatus', [
+            Log::error('Error in UpdatesApplicationStatus::updateHealthStatus', [
                 'exception' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

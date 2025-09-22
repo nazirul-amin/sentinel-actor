@@ -86,17 +86,18 @@ class WebhookClient
     }
 
     /**
-     * Send application status update
+     * Send application health status
      */
-    public function sendStatusUpdate(string $status, ?string $message = null, array $context = []): void
+    public function sendHealthStatus(bool $isHealthy, ?string $message = null, array $context = []): void
     {
         try {
             $data = [
                 'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
                 'application_version' => config('sentinel-actor.webhook.application_version', '1.0.0'),
                 'environment' => App::environment(),
-                'type' => 'status_update',
-                'status' => $status,
+                'type' => 'health_status',
+                'status' => $isHealthy ? 'active' : 'inactive',
+                'healthy' => $isHealthy,
                 'message' => $message,
                 'timestamp' => time(),
                 'context' => $context,
@@ -107,7 +108,7 @@ class WebhookClient
                 $data
             );
         } catch (Throwable $e) {
-            Log::error('Error in WebhookClient::sendStatusUpdate', [
+            Log::error('Error in WebhookClient::sendHealthStatus', [
                 'exception' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

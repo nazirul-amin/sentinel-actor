@@ -3,6 +3,7 @@
 namespace NazirulAmin\SentinelActor;
 
 use Illuminate\Support\ServiceProvider;
+use NazirulAmin\SentinelActor\Commands\HealthCheckCommand;
 use NazirulAmin\SentinelActor\Commands\SentinelActorCommand;
 
 class SentinelActorServiceProvider extends ServiceProvider
@@ -26,6 +27,7 @@ class SentinelActorServiceProvider extends ServiceProvider
 
         $this->commands([
             SentinelActorCommand::class,
+            HealthCheckCommand::class,
         ]);
     }
 }

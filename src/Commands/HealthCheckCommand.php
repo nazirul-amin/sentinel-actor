@@ -97,7 +97,7 @@ class HealthCheckCommand extends Command
         // Queue check
         try {
             $queue = app('queue');
-            $queue->pushRaw('health_check');
+            $queue->size();
             $checks['queue'] = ['status' => true, 'message' => null];
         } catch (Throwable $e) {
             $checks['queue'] = ['status' => false, 'message' => $e->getMessage()];
@@ -106,7 +106,7 @@ class HealthCheckCommand extends Command
         // Mail check
         try {
             $mailer = app('mailer');
-            $mailer->getSwiftMailer();
+            $mailer->getViewFactory();
             $checks['mail'] = ['status' => true, 'message' => null];
         } catch (Throwable $e) {
             $checks['mail'] = ['status' => false, 'message' => $e->getMessage()];

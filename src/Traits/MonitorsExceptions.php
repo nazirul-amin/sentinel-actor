@@ -17,7 +17,10 @@ trait MonitorsExceptions
     {
         try {
             // Get class context information
-            $context = $this->getMonitoringContext();
+            $context = array_merge([
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ], $this->getMonitoringContext());
 
             // Send exception to monitoring service
             SentinelActor::sendException($exception, $context);

@@ -2,6 +2,7 @@
 
 namespace NazirulAmin\SentinelActor;
 
+use Illuminate\Support\Facades\App;
 use Throwable;
 
 class SentinelActor
@@ -22,10 +23,21 @@ class SentinelActor
     }
 
     /**
+     * Send application status update to monitoring service
+     */
+    public function sendStatusUpdate(string $status, ?string $message = null, array $context = []): void
+    {
+        $this->webhookClient->sendStatusUpdate($status, $message, $context);
+    }
+
+    /**
      * Send custom event data to monitoring service
      */
     public function send(string $endpoint, array $data): void
     {
+        // Ensure environment is included in custom events
+        $data['environment'] = $data['environment'] ?? App::environment();
+
         $this->webhookClient->send($endpoint, $data);
     }
 

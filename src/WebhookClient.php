@@ -2,6 +2,7 @@
 
 namespace NazirulAmin\SentinelActor;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -63,6 +64,7 @@ class WebhookClient
         try {
             $data = [
                 'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
+                'environment' => config('sentinel-actor.webhook.environment', 'production'),
                 'type' => 'exception',
                 'message' => $exception->getMessage(),
                 'file' => $exception->getFile(),
@@ -76,6 +78,34 @@ class WebhookClient
             $this->send(config('sentinel-actor.webhook.endpoint', '/application/exceptions'), $data);
         } catch (Throwable $e) {
             Log::error('Error in WebhookClient::sendException', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+    }
+
+    /**
+     * Send application status update
+     */
+    public function sendStatusUpdate(string $status, ?string $message = null, array $context = []): void
+    {
+        try {
+            $data = [
+                'application_id' => config('sentinel-actor.webhook.application_id', 'app-id'),
+                'environment' => App::environment(),
+                'type' => 'status_update',
+                'status' => $status,
+                'message' => $message,
+                'timestamp' => time(),
+                'context' => $context,
+            ];
+
+            $this->send(
+                config('sentinel-actor.webhook.status_endpoint', '/application/status'),
+                $data
+            );
+        } catch (Throwable $e) {
+            Log::error('Error in WebhookClient::sendStatusUpdate', [
                 'exception' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

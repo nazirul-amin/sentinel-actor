@@ -37,6 +37,7 @@ return [
     'webhook' => [
         'url' => env('SENTINEL_WEBHOOK_URL'),
         'endpoint' => env('SENTINEL_EXCEPTION_URL', '/application/exceptions'),
+        'status_endpoint' => env('SENTINEL_STATUS_URL', '/application/status'),
         'application_id' => env('SENTINEL_APPLICATION_ID', 'app-id'),
         'secret' => env('SENTINEL_WEBHOOK_SECRET'),
     ],
@@ -60,6 +61,7 @@ Add the following environment variables to your `.env` file:
 ```env
 SENTINEL_WEBHOOK_URL=https://your-monitoring-service.com/webhook
 SENTINEL_EXCEPTION_URL=/application/exceptions
+SENTINEL_STATUS_URL=/application/status
 SENTINEL_APPLICATION_ID=your-app-name
 SENTINEL_WEBHOOK_SECRET=your-hmac-secret
 SENTINEL_ENABLED=true
@@ -151,6 +153,50 @@ class YourNotification extends Notification implements ShouldQueue
 }
 ```
 
+### Updating Application Status
+
+To send application status updates, use the `UpdatesApplicationStatus` trait:
+
+```php
+<?php
+
+namespace App\Services;
+
+use NazirulAmin\SentinelActor\Traits\UpdatesApplicationStatus;
+
+class ApplicationService
+{
+    use UpdatesApplicationStatus;
+
+    public function start()
+    {
+        // Your application start logic
+
+        // Send status update
+        $this->updateApplicationStatus('running', 'Application started successfully', [
+            'version' => '1.0.0',
+            'environment' => app()->environment(),
+        ]);
+    }
+
+    public function stop()
+    {
+        // Your shutdown logic
+
+        // Send status update
+        $this->updateApplicationStatus('stopped', 'Application shutdown complete');
+    }
+
+    // Optional: Add context data to be sent with status updates
+    protected function getStatusContextData(): array
+    {
+        return [
+            'service_specific_data' => $this->someProperty,
+        ];
+    }
+}
+```
+
 ### Manual Exception Monitoring
 
 You can also manually send exception data using the facade:
@@ -177,6 +223,7 @@ use NazirulAmin\SentinelActor\Facades\SentinelActor;
 
 SentinelActor::send('/application/events', [
     'application_id' => 'your-app-name',
+    'environment' => 'production',
     'event_type' => 'user_registered',
     'level' => 'info',
     'message' => 'A new user registered',
@@ -186,6 +233,35 @@ SentinelActor::send('/application/events', [
     'timestamp' => time(),
 ]);
 ```
+
+## Webhook Payload Structure
+
+All webhooks sent by this package include the following data:
+
+### Exception Webhooks
+
+-   `application_id`: The application identifier from config
+-   `environment`: The current Laravel environment (local, production, staging, etc.)
+-   `type`: Set to 'exception'
+-   `message`: The exception message
+-   `file`: The file where the exception occurred
+-   `line`: The line number where the exception occurred
+-   `timestamp`: Unix timestamp when the exception occurred
+-   `code`: The exception code
+-   `trace`: The full exception trace
+-   `context`: Additional context information
+
+### Status Update Webhooks
+
+-   `application_id`: The application identifier from config
+-   `environment`: The current Laravel environment (local, production, staging, etc.)
+-   `type`: Set to 'status_update'
+-   `status`: The status being reported (e.g., 'running', 'stopped', 'maintenance')
+-   `message`: Optional message describing the status
+-   `timestamp`: Unix timestamp when the status update was sent
+-   `context`: Additional context information
+
+All requests are signed with HMAC-SHA256 for security.
 
 ## Testing
 
